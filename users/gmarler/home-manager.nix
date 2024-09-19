@@ -102,23 +102,23 @@ in {
     "Library/Application Support/jj/config.toml".source = ./jujutsu.toml;
   } else {});
 
-  xdg.configFile = {
-    "i3/config".text = builtins.readFile ./i3;
-    "rofi/config.rasi".text = builtins.readFile ./rofi;
+  ### xdg.configFile = {
+  ###   "i3/config".text = builtins.readFile ./i3;
+  ###   "rofi/config.rasi".text = builtins.readFile ./rofi;
 
-    # tree-sitter parsers
-    "nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
-    "nvim/queries/proto/folds.scm".source =
-      "${sources.tree-sitter-proto}/queries/folds.scm";
-    "nvim/queries/proto/highlights.scm".source =
-      "${sources.tree-sitter-proto}/queries/highlights.scm";
-  } // (if isDarwin then {
-    # Rectangle.app. This has to be imported manually using the app.
-    "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
-  } else {}) // (if isLinux then {
-    "ghostty/config".text = builtins.readFile ./ghostty.linux;
-    "jj/config.toml".source = ./jujutsu.toml;
-  } else {});
+  ###   # tree-sitter parsers
+  ###   "nvim/parser/proto.so".source = "${pkgs.tree-sitter-proto}/parser";
+  ###   "nvim/queries/proto/folds.scm".source =
+  ###     "${sources.tree-sitter-proto}/queries/folds.scm";
+  ###   "nvim/queries/proto/highlights.scm".source =
+  ###     "${sources.tree-sitter-proto}/queries/highlights.scm";
+  ### } // (if isDarwin then {
+  ###   # Rectangle.app. This has to be imported manually using the app.
+  ###   "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+  ### } else {}) // (if isLinux then {
+  ###   "ghostty/config".text = builtins.readFile ./ghostty.linux;
+  ###   "jj/config.toml".source = ./jujutsu.toml;
+  ### } else {});
 
   #---------------------------------------------------------------------
   # Programs
