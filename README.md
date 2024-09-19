@@ -11,6 +11,13 @@ improvements that could be made! Feel free to suggest them, but please don't
 be offended if I don't integrate them, I value having my config work over
 having it be optimal.
 
+## Things that Still Don't Work
+
+** Cut from MacOS and Paste into NixOS
+** prltools to get Dual Displays working on NixOS
+** Use of proxy on MacOS from within NixOS
+** Installation of within-VPN CA Certs into NixOS
+
 ## How I Work
 
 I like to use macOS as the host OS and NixOS within a VM as my primary

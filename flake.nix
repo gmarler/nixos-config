@@ -1,5 +1,5 @@
 {
-  description = "NixOS systems and tools by mitchellh";
+  description = "NixOS systems and tools by gmarler";
 
   inputs = {
     # Pin our primary nixpkgs repository. This is the main nixpkgs repository
@@ -37,7 +37,6 @@
 
     # Other packages
     jujutsu.url = "github:martinvonz/jj";
-    zig.url = "github:mitchellh/zig-overlay";
 
     # Non-flakes
     nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
@@ -60,8 +59,6 @@
     nvim-treesitter.flake = false;
     nvim-web-devicons.url = "github:nvim-tree/nvim-web-devicons";
     nvim-web-devicons.flake = false;
-    vim-copilot.url = "github:github/copilot.vim/v1.39.0";
-    vim-copilot.flake = false;
     vim-misc.url = "github:mitchellh/vim-misc";
     vim-misc.flake = false;
   };
@@ -70,7 +67,6 @@
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
       inputs.jujutsu.overlays.default
-      inputs.zig.overlays.default
     ];
 
     mkSystem = import ./lib/mksystem.nix {
@@ -79,33 +75,33 @@
   in {
     nixosConfigurations.vm-aarch64 = mkSystem "vm-aarch64" {
       system = "aarch64-linux";
-      user   = "mitchellh";
+      user   = "gmarler";
     };
 
     nixosConfigurations.vm-aarch64-prl = mkSystem "vm-aarch64-prl" rec {
       system = "aarch64-linux";
-      user   = "mitchellh";
+      user   = "gmarler";
     };
 
     nixosConfigurations.vm-aarch64-utm = mkSystem "vm-aarch64-utm" rec {
       system = "aarch64-linux";
-      user   = "mitchellh";
+      user   = "gmarler";
     };
 
     nixosConfigurations.vm-intel = mkSystem "vm-intel" rec {
       system = "x86_64-linux";
-      user   = "mitchellh";
+      user   = "gmarler";
     };
 
     nixosConfigurations.wsl = mkSystem "wsl" {
       system = "x86_64-linux";
-      user   = "mitchellh";
+      user   = "gmarler";
       wsl    = true;
     };
 
     darwinConfigurations.macbook-pro-m1 = mkSystem "macbook-pro-m1" {
       system = "aarch64-darwin";
-      user   = "mitchellh";
+      user   = "gmarler";
       darwin = true;
     };
   };

@@ -131,26 +131,6 @@ in {
     rxvt_unicode
     xclip
 
-    _1password
-    lastpass-cli
-    fd
-    htop
-    tree
-    wireshark
-    firefox
-    betterbird
-    neovim
-    nodejs_22
-    python3
-    jq
-    lua
-    ripgrep
-    luajitPackages.luarocks
-    curl
-    wget
-    gcc
-    gdb
-
     gnomeExtensions.kimpanel
 
     # For hypervisors that support auto-resizing, this script forces it.
