@@ -192,6 +192,8 @@ in {
     # the time of writing this.
   };
 
+  # See for interesting details:
+  # https://haseebmajid.dev/posts/2023-07-10-setting-up-tmux-with-nix-home-manager/
   programs.tmux = {
     enable = true;
     terminal = "xterm-256color";
