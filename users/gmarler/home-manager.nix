@@ -200,14 +200,11 @@ in {
 
     plugins = with pkgs;
       [
-        {
           tmuxPlugins.vim-tmux-navigator
           tmuxPlugins.catppuccin
           tmuxPlugins.yank
           tmuxPlugins.resurrect
           tmuxPlugins.continuum
-        }
-
       ];
 
     extraConfig = ''
