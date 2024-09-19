@@ -20,10 +20,10 @@ in {
     # public binary cache that I use for all my derivations. You can keep
     # this, use your own, or toss it. Its typically safe to use a binary cache
     # since the data inside is checksummed.
-    settings = {
-      substituters = ["https://mitchellh-nixos-config.cachix.org"];
-      trusted-public-keys = ["mitchellh-nixos-config.cachix.org-1:bjEbXJyLrL1HZZHBbO4QALnI5faYZppzkU4D2s0G8RQ="];
-    };
+    # settings = {
+    #   substituters = ["https://mitchellh-nixos-config.cachix.org"];
+    #   trusted-public-keys = ["mitchellh-nixos-config.cachix.org-1:bjEbXJyLrL1HZZHBbO4QALnI5faYZppzkU4D2s0G8RQ="];
+    # };
   };
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -121,14 +121,37 @@ in {
   };
 
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
+    linuxKernel.packages.linux_6_6.prl-tools
     cachix
     gnumake
     killall
     niv
     rxvt_unicode
     xclip
+
+    _1password
+    lastpass-cli
+    fd
+    htop
+    tree
+    wireshark
+    firefox
+    betterbird
+    neovim
+    nodejs_22
+    python3
+    jq
+    lua
+    ripgrep
+    luajitPackages.luarocks
+    curl
+    wget
+    gcc
+    gdb
+
+    gnomeExtensions.kimpanel
 
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -153,7 +176,7 @@ in {
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   services.openssh.settings.PasswordAuthentication = true;
-  services.openssh.settings.PermitRootLogin = "no";
+  services.openssh.settings.PermitRootLogin = "yes";
 
   # Disable the firewall since we're in a VM and we want to make it
   # easy to visit stuff in here. We only use NAT networking anyways.
