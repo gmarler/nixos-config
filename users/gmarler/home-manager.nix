@@ -61,6 +61,7 @@ in {
     pkgs.stylua
     pkgs.unzip
     pkgs.nerdfonts
+    pkgs.rust-analyzer
     # Currently trying to do via oxalica
     # pkgs.rust-analyzer
     # For bpftool
@@ -69,6 +70,8 @@ in {
     pkgs.dig
     # For telnet
     pkgs.inetutils
+    # For Clickhouse development
+    pkgs.clickhouse
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
@@ -300,27 +303,6 @@ in {
     '';
   };
 
-  programs.alacritty = {
-    enable = !isWSL;
-
-    settings = {
-      env.TERM = "xterm-256color";
-
-      key_bindings = [
-        { key = "K"; mods = "Command"; chars = "ClearHistory"; }
-        { key = "V"; mods = "Command"; action = "Paste"; }
-        { key = "C"; mods = "Command"; action = "Copy"; }
-        { key = "Key0"; mods = "Command"; action = "ResetFontSize"; }
-        { key = "Equals"; mods = "Command"; action = "IncreaseFontSize"; }
-        { key = "Subtract"; mods = "Command"; action = "DecreaseFontSize"; }
-      ];
-    };
-  };
-
-  programs.kitty = {
-    enable = !isWSL;
-    extraConfig = builtins.readFile ./kitty;
-  };
 
   programs.i3status = {
     enable = isLinux && !isWSL;
