@@ -72,6 +72,8 @@ in {
     pkgs.inetutils
     # For Clickhouse development
     pkgs.clickhouse
+    # Love me some Infocom
+    pkgs.frotz
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
