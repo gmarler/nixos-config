@@ -135,7 +135,7 @@ in {
     enable = true;
     shellOptions = [];
     historyControl = [ "ignoredups" "ignorespace" ];
-    # initExtra = builtins.readFile ./bashrc;
+    initExtra = builtins.readFile ./bashrc;
 
     shellAliases = {
       # ga = "git add";
