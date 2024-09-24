@@ -202,4 +202,93 @@ alias iso8601="date '+%Y-%m-%dT%H:%M:%S%z'" # ISO 8601 time
 alias now="date       '+%F %T %Z(%z)'"      # More readable ISO 8601 local
 alias utc="date --utc '+%F %T %Z(%z)'"      # More readable ISO 8601 UTC
 
+if [[ "${UNAME_S}" == "Linux" ]]; then
+	alias gc='xsel -b'  # "GetClip" get stuff from right "X" clipboard
+	alias pc='xsel -bi' # "PutClip" put stuff to right "X" clipboard
+	alias cal='cal -M'  # Start calendars on Monday
+	alias df='df --print-type --exclude-type=tmpfs --exclude-type=devtmpfs'
+	alias inxi='inxi -c19' # (Ubuntu) system information script
+	alias jdiff="\diff --side-by-side --ignore-case --ignore-blank-lines\
+    --ignore-all-space --suppress-common-lines" # Useful GNU diff command
+	alias ntsysv='rcconf'                          # Debian rcconf is pretty close to Red Hat ntsysv
+	alias pathping='mtr'                           # mtr - a network diagnostic tool
+	#
+	# Neat stuff from http://xmodulo.com/useful-bash-aliases-functions.html
+	#
+	alias meminfo='free -m -l -t'  # See how much memory you have left
+	alias whatpid='ps auwx | grep' # Get PID and process info
+	alias port='netstat -tulanp'   # Show which apps are connecting to the network
 
+	# Ubuntu Packaging (Debian) specific
+	if test -x /usr/bin/lsb_release; then
+		if /usr/bin/lsb_release -i | grep -q "Ubuntu"; then
+			export DEBFULLNAME="Gordon Marler"
+			export DEBEMAIL="gmarler@bloomberg.net"
+			# Quilt related
+			alias dquilt="quilt --quiltrc=${HOME}/.quiltrc-dpkg"
+			complete -F _quilt_completion -o filenames dquilt
+		fi
+	fi
+fi
+
+# nix related aliases (mostly related to Bloomberg CA Cert handling
+alias nix_prefix="NIX_SSL_CERT_FILE=~gmarler/CA-Certs/ALL-CERTS \
+  CURL_CA_BUNDLE=~gmarler/CA-Certs/ALL-CERTS \
+  https_proxy=http://localhost:8888/ http_proxy=http://localhost:8888/ "
+
+# Admin Server aliases
+alias rw="rwin -s"
+
+# MacOS BBVPN host(s)
+if [[ "${UNAME_S}" == "Darwin" ]]; then
+	# node-proxy aliases
+	alias nodeproxy_bbvpn="cd ~/gitwork/nodeproxy &&\
+   npx bb-nodeproxy -D --wpadUrl http://wpad.bloomberg.com/wpad-la.dat\
+   --proxyAddress 0.0.0.0 --proxyPort 8888"
+	alias nodeproxy="cd ~/gitwork/nodeproxy &&\
+   npx bb-nodeproxy -D \
+   --proxyAddress 0.0.0.0 --proxyPort 8888"
+	# Updated PATH settings for MacOS/Brew:
+	export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+	# Date/time alias updates to use GNU coreutils gdate
+	alias iso8601="gdate '+%Y-%m-%dT%H:%M:%S%z'" # ISO 8601 time
+	alias now="gdate       '+%F %T %Z(%z)'"      # More readable ISO 8601 local
+	alias utc="gdate --utc '+%F %T %Z(%z)'"      # More readable ISO 8601 UTC
+	# HomeBrew Bash completions, if present
+	if [[ -f /opt/homebrew/etc/bash_completion ]]; then
+		. /opt/homebrew/etc/bash_completion
+	fi
+	# Set up Pyenv
+	export PYENV_ROOT="$HOME/.pyenv"
+	command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+	eval "$(pyenv init -)"
+fi
+
+# If the script exists and is executable, create an alias to get
+# web server headers
+for path in ${PATH//:/ }; do
+	[ -x "$path/lwp-request" ] && alias httpdinfo='lwp-request -eUd' && break
+done
+
+# Useful functions
+parse_git_branch() {
+	git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# Custom local overrides
+if [[ -f "$HOME/.bashrc.custom" ]]; then
+	echo "Sourcing Custom .bashrc.custom"
+	source $HOME/.bashrc.custom
+fi
