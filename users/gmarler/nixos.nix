@@ -3,7 +3,7 @@
 {
   # Proxies for use inside MacOS running nodeproxy behind BBVPN
   networking.proxy.default = "http://10.211.55.2:8888/";
-  networking.proxy.default = "127.0.0.1,localhost,internal.domain";
+  networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Add CA Certificates for Bloomberg's MITM proxy
   security.pki.certificateFiles = [
