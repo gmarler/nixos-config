@@ -80,6 +80,8 @@ in {
     pkgs.tailscale
   ]) ++ (lib.optionals (isLinux && !isWSL) [
     pkgs.chromium
+    # Markdown Preview Browser
+    pkgs.floorp
     pkgs.firefox
     pkgs.rofi
     pkgs.valgrind
@@ -218,33 +220,33 @@ in {
       # Ensure that we start a bash shell for each tmux window, so .bashrc is invoked
       # as a side effect
       set-option -g default-command bash
-      
+
       ###############################################################################
       # "Sensible" tmux defaults
       ###############################################################################
       # Address vim mode switching delay (http://superuser.com/a/252717/65504)
       set -s escape-time 0
-      
+
       # Increase scrollback buffer size from 2000 to 750000 lines
       set -g history-limit 750000
-      
+
       # Increase tmux messages display duration from 750ms to 4s
       set -g display-time 4000
-      
+
       # Refresh 'status-left' and 'status-right' more often, from every 15s to 5s
       set -g status-interval 5
-      
+
       # Upgrade $TERM
       set -g default-terminal "screen-256color"
-      
+
       # Focus events enabled for terminals that support them
       set -g focus-events on
-      
+
       # Super useful when using "grouped sessions" and multi-monitor setup
       setw -g aggressive-resize on
-      
+
       ###############################################################################
-      
+
       ###############################################################################
       # Conveniences
       ###############################################################################
@@ -252,15 +254,15 @@ in {
       bind-key -n C-S-Left swap-window -t -1\; select-window -t -1
       bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
       ###############################################################################
-      
+
       set-option -sa terminal-overrides ",xterm*:Tc"
       set -g mouse on
-      
+
       # MY prefix (C-a, not C-b)
       unbind C-b
       set-option -g prefix C-a
       bind-key C-a send-prefix
-      
+
       # Shift Alt vim keys to switch windows
       bind -n M-H previous-window
       bind -n M-L next-window
@@ -270,10 +272,10 @@ in {
       set -g pane-base-index 1
       set-window-option -g pane-base-index 1
       set-option -g renumber-windows on
-      
+
       # set -g @catppuccin_flavour 'latte'
       set -g @catppuccin_flavour 'frappe'
-      
+
       # set -g @plugin 'tmux-plugins/tpm'
       # We set these separately above
       # set -g @plugin 'tmux-plugins/tmux-sensible'
@@ -286,21 +288,21 @@ in {
       # Depends on tmux-resurrect, and automatically/continuously saves tmux
       # environment, as well as automatically restoring it upon tmux startup
       # set -g @plugin 'tmux-plugins/tmux-continuum'
-      
+
       # set vi-mode
       set-window-option -g mode-keys vi
-      
+
       # keybindings
       bind-key -T copy-mode-vi v send-keys -X begin-selection
       bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
       bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
-      
+
       # Open panes in current directory using sane split commands
       bind '-' split-window -v -c "#{pane_current_path}"
       bind '|' split-window -h -c "#{pane_current_path}"
       unbind '"'
       unbind '%'
-      
+
       # run '~/.tmux/plugins/tpm/tpm'
     '';
   };
