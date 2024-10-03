@@ -47,7 +47,13 @@ in {
     pkgs.lastpass-cli
     pkgs.wireshark
     pkgs.betterbird
-    pkgs.nodejs_22
+    # NodeJS Dev Environment
+    #pkgs.nodejs_22
+    pkgs.nodePackages_latest.nodejs
+    #pkgs.nodePackages_latest.npm
+    pkgs.nodePackages_latest.webpack
+    pkgs.nodePackages_latest.webpack-cli
+
     pkgs.python3
     pkgs.lua
     pkgs.luajitPackages.luarocks
