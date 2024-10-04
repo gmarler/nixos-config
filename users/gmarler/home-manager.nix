@@ -53,6 +53,8 @@ in {
     #pkgs.nodePackages_latest.npm
     pkgs.nodePackages_latest.webpack
     pkgs.nodePackages_latest.webpack-cli
+    pkgs.nodePackages_latest.gulp
+    pkgs.nodePackages_latest.node2nix
 
     pkgs.python3
     pkgs.lua
