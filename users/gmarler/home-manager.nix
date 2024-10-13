@@ -55,6 +55,7 @@ in {
     pkgs.nodePackages_latest.webpack-cli
     pkgs.nodePackages_latest.gulp
     pkgs.nodePackages_latest.node2nix
+    pkgs.nodePackages_latest.jsonlint
 
     pkgs.python3
     pkgs.lua
