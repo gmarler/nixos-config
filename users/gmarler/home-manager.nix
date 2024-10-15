@@ -71,8 +71,10 @@ in {
     pkgs.unzip
     pkgs.nerdfonts
     pkgs.rust-analyzer
-    # NOTE: This package should be installed via the nixvim flake, not here
+    # NOTE: These packages should be installed via the nixvim flake, not here
     pkgs.statix
+    pkgs.eslint_d
+    # END OF PKGS specific to nixvim flake ####################################
     # Currently trying to do via oxalica
     # pkgs.rust-analyzer
     # For bpftool
