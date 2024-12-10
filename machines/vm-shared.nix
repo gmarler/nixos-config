@@ -40,7 +40,7 @@ in {
   boot.loader.systemd-boot.consoleMode = "0";
 
   # Define your hostname.
-  networking.hostName = "dev";
+  networking.hostName = "greenbirch";
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -131,6 +131,7 @@ in {
     rxvt_unicode
     xclip
 
+    # TODO: GM - Do we even need this line???
     gnomeExtensions.kimpanel
 
     # For hypervisors that support auto-resizing, this script forces it.
@@ -138,7 +139,9 @@ in {
     (writeShellScriptBin "xrandr-auto" ''
       xrandr --output Virtual-1 --auto
     '')
-  ] ++ lib.optionals (currentSystemName == "vm-aarch64") [
+  ] ++ lib.optionals (currentSystemName == "vm-aarch64-prl") [
+    # TODO: The currentSystemName should be scrutinized, and probably should be
+    #       vm-aarch64-prl for my config
     # This is needed for the vmware user tools clipboard to work.
     # You can test if you don't need this by deleting this and seeing
     # if the clipboard sill works.
