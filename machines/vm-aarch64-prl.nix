@@ -11,7 +11,7 @@
 
   hardware.parallels.enable = true;
 
-  # Interface is this on my M1
+  # Interface is this on my M2
   networking.interfaces.enp0s5.useDHCP = true;
 
   # Lots of stuff that uses aarch64 that claims doesn't work, but actually works.
