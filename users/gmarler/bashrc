@@ -14,6 +14,9 @@ if [[ -x /usr/bin/uname ]]; then
 elif [[ -x /bin/uname ]]; then
 	# Linux, Solaris
 	UNAME=/bin/uname
+else
+  # For Nix and the like
+  UNAME=$(which uname)
 fi
 
 UNAME_S=$(${UNAME} -s)
