@@ -8,7 +8,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     # We use the unstable nixpkgs repo for some packages.
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Build a custom WSL installer
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
@@ -27,50 +27,52 @@
     # I think technically you're not supposed to override the nixpkgs
     # used by neovim but recently I had failures if I didn't pin to my
     # own. We can always try to remove that anytime.
-    neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
+    # neovim-nightly-overlay = {
+    #   url = "github:nix-community/neovim-nightly-overlay";
 
-      # Only need unstable until the lpeg fix hits mainline, probably
-      # not very long... can safely switch back for 23.11.
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
+    #   # Only need unstable until the lpeg fix hits mainline, probably
+    #   # not very long... can safely switch back for 23.11.
+    #   inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # };
 
     # Other packages
-    jujutsu.url = "github:martinvonz/jj";
+    # jujutsu.url = "github:martinvonz/jj";
 
     # Non-flakes
-    nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
-    nvim-conform.flake = false;
-    nvim-dressing.url = "github:stevearc/dressing.nvim";
-    nvim-dressing.flake = false;
-    nvim-gitsigns.url = "github:lewis6991/gitsigns.nvim/v0.9.0";
-    nvim-gitsigns.flake = false;
-    nvim-lspconfig.url = "github:neovim/nvim-lspconfig";
-    nvim-lspconfig.flake = false;
-    nvim-lualine.url ="github:nvim-lualine/lualine.nvim";
-    nvim-lualine.flake = false;
-    nvim-nui.url = "github:MunifTanjim/nui.nvim";
-    nvim-nui.flake = false;
-    nvim-plenary.url = "github:nvim-lua/plenary.nvim";
-    nvim-plenary.flake = false;
-    nvim-telescope.url = "github:nvim-telescope/telescope.nvim/0.1.8";
-    nvim-telescope.flake = false;
-    nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.2";
-    nvim-treesitter.flake = false;
-    nvim-web-devicons.url = "github:nvim-tree/nvim-web-devicons";
-    nvim-web-devicons.flake = false;
-    vim-misc.url = "github:mitchellh/vim-misc";
-    vim-misc.flake = false;
+    # These are eliminated becauae I use nixvim instead
+    # nvim-conform.url = "github:stevearc/conform.nvim/v7.1.0";
+    # nvim-conform.flake = false;
+    # nvim-dressing.url = "github:stevearc/dressing.nvim";
+    # nvim-dressing.flake = false;
+    # nvim-gitsigns.url = "github:lewis6991/gitsigns.nvim/v0.9.0";
+    # nvim-gitsigns.flake = false;
+    # nvim-lspconfig.url = "github:neovim/nvim-lspconfig";
+    # nvim-lspconfig.flake = false;
+    # nvim-lualine.url ="github:nvim-lualine/lualine.nvim";
+    # nvim-lualine.flake = false;
+    # nvim-nui.url = "github:MunifTanjim/nui.nvim";
+    # nvim-nui.flake = false;
+    # nvim-plenary.url = "github:nvim-lua/plenary.nvim";
+    # nvim-plenary.flake = false;
+    # nvim-telescope.url = "github:nvim-telescope/telescope.nvim/0.1.8";
+    # nvim-telescope.flake = false;
+    # nvim-treesitter.url = "github:nvim-treesitter/nvim-treesitter/v0.9.2";
+    # nvim-treesitter.flake = false;
+    # nvim-web-devicons.url = "github:nvim-tree/nvim-web-devicons";
+    # nvim-web-devicons.flake = false;
+    # vim-misc.url = "github:mitchellh/vim-misc";
+    # vim-misc.flake = false;
   };
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
     # Overlays is the list of overlays we want to apply from flake inputs.
-    overlays = [
-      inputs.jujutsu.overlays.default
-    ];
+    # overlays = [
+    #   inputs.jujutsu.overlays.default
+    # ];
 
     mkSystem = import ./lib/mksystem.nix {
-      inherit overlays nixpkgs inputs;
+      # inherit overlays nixpkgs inputs;
+      inherit nixpkgs inputs;
     };
   in {
     nixosConfigurations.vm-aarch64 = mkSystem "vm-aarch64" {

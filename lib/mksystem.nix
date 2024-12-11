@@ -1,6 +1,6 @@
 # This function creates a NixOS system based on our VM setup for a
 # particular architecture.
-{ nixpkgs, overlays, inputs }:
+{ nixpkgs, inputs }:
 
 name:
 {
@@ -29,7 +29,7 @@ in systemFunc rec {
     # Apply our overlays. Overlays are keyed by system type so we have
     # to go through and apply our system type. We do this first so
     # the overlays are available globally.
-    { nixpkgs.overlays = overlays; }
+    # { nixpkgs.overlays = overlays; }
 
     # Allow unfree packages.
     { nixpkgs.config.allowUnfree = true; }

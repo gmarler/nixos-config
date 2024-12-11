@@ -9,7 +9,10 @@
     ./vm-shared.nix
   ];
 
+  # Turn this on when the parallels tools work - comment out when it's failing
   hardware.parallels.enable = true;
+  # And eliminate this when parallels tools work again
+  # disabledModules = [ "virtualisation/parallels-guest.nix" ];
 
   # Interface is this on my M2
   networking.interfaces.enp0s5.useDHCP = true;
