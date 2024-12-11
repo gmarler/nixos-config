@@ -55,7 +55,8 @@
     ];
   };
 
-  nixpkgs.overlays = import ../../lib/overlays.nix ++ [
-    (import ./vim.nix { inherit inputs; })
-  ];
+  # Eliminate because I use nixvim
+  # nixpkgs.overlays = import ../../lib/overlays.nix ++ [
+  #   (import ./vim.nix { inherit inputs; })
+  # ];
 }
