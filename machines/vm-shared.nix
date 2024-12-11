@@ -62,9 +62,7 @@ in {
     inputMethod = {
       enabled = "fcitx5";
       fcitx5.addons = with pkgs; [
-        fcitx5-mozc
         fcitx5-gtk
-        fcitx5-chinese-addons
       ];
     };
   };
@@ -101,11 +99,6 @@ in {
     };
   };
 
-  # Enable tailscale. We manually authenticate when we want with
-  # "sudo tailscale up". If you don't use tailscale, you should comment
-  # out or delete all of this.
-  services.tailscale.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.mutableUsers = false;
 
@@ -123,7 +116,6 @@ in {
   # List packages installed in system profile. To search, run:
   # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
-    linuxKernel.packages.linux_6_6.prl-tools
     cachix
     gnumake
     killall
