@@ -3,7 +3,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  sources = import ../../nix/sources.nix;
+  # sources = import ../../nix/sources.nix;
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
 
@@ -46,7 +46,7 @@ in {
 
     pkgs.lastpass-cli
     pkgs.wireshark
-    pkgs.betterbird
+    # pkgs.betterbird
     # NodeJS Dev Environment
     #pkgs.nodejs_22
     pkgs.nodePackages_latest.nodejs
@@ -66,7 +66,7 @@ in {
     pkgs.gdb
     # For my neovim config
     pkgs.stow
-    pkgs.tree-sitter
+    # pkgs.tree-sitter
     pkgs.stylua
     pkgs.unzip
     pkgs.nerdfonts
@@ -118,9 +118,7 @@ in {
   home.file = {
     ".gdbinit".source = ./gdbinit;
     ".inputrc".source = ./inputrc;
-  } // (if isDarwin then {
-    "Library/Application Support/jj/config.toml".source = ./jujutsu.toml;
-  } else {});
+  };
 
   ### xdg.configFile = {
   ###   "i3/config".text = builtins.readFile ./i3;
@@ -205,12 +203,6 @@ in {
     };
   };
 
-  programs.jujutsu = {
-    enable = true;
-
-    # I don't use "settings" because the path is wrong on macOS at
-    # the time of writing this.
-  };
 
   # See for interesting details:
   # https://haseebmajid.dev/posts/2023-07-10-setting-up-tmux-with-nix-home-manager/
@@ -340,49 +332,8 @@ in {
 
   programs.neovim = {
     enable = true;
-    # Only if you want to use nightly
-    package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
-    # package = inputs.pkgs.unstable.neovim-unwrapped;
-    # package = pkgs.neovim-unwrapped;
 
     withPython3 = true;
-
-    plugins = with pkgs; [
-      customVim.vim-cue
-      customVim.vim-glsl
-      customVim.vim-misc
-      customVim.vim-pgsql
-      customVim.vim-tla
-      customVim.pigeon
-      customVim.AfterColors
-
-      customVim.vim-nord
-      customVim.nvim-comment
-      customVim.nvim-conform
-      customVim.nvim-dressing
-      customVim.nvim-gitsigns
-      customVim.nvim-lualine
-      customVim.nvim-lspconfig
-      customVim.nvim-nui
-      customVim.nvim-plenary # required for telescope
-      customVim.nvim-telescope
-      customVim.nvim-treesitter
-      customVim.nvim-treesitter-playground
-      customVim.nvim-treesitter-textobjects
-
-      vimPlugins.vim-eunuch
-      vimPlugins.vim-markdown
-      vimPlugins.vim-nix
-      vimPlugins.typescript-vim
-      vimPlugins.nvim-treesitter-parsers.elixir
-    ] ++ (lib.optionals (!isWSL) [
-      # This is causing a segfaulting while building our installer
-      # for WSL so just disable it for now. This is a pretty
-      # unimportant plugin anyway.
-      customVim.nvim-web-devicons
-    ]);
-
-    extraConfig = (import ./vim-config.nix) { inherit sources; };
   };
 
   services.gpg-agent = {
