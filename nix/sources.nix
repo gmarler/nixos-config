@@ -178,7 +178,8 @@ let
 
   # The "config" used by the fetchers
   mkConfig =
-    { sourcesFile ? if builtins.pathExists ./sources.json then ./sources.json else null
+    #{ sourcesFile ? if builtins.pathExists ./sources.json then ./sources.json else null
+    { sourcesFile ? if builtins.pathExists ./sources.json then null else null
     , sources ? if isNull sourcesFile then {} else builtins.fromJSON (builtins.readFile sourcesFile)
     , system ? builtins.currentSystem
     , pkgs ? mkPkgs sources system
