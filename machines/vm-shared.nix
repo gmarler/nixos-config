@@ -120,7 +120,10 @@ in {
     gnumake
     killall
     niv
+    # For NixOS 24.05 and below
     rxvt_unicode
+    # For NixOS 24.11 and above
+    #rxvt-unicode-unwrapped
     xclip
 
     # TODO: GM - Do we even need this line???
