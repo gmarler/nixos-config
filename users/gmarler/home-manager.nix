@@ -29,7 +29,7 @@ in {
   # per-project flakes sourced with direnv and nix-shell, so this is
   # not a huge list.
   home.packages = [
-    pkgs._1password
+    # pkgs._1password
     pkgs.asciinema
     pkgs.bat
     pkgs.fd
@@ -44,7 +44,8 @@ in {
 
     pkgs.gopls
 
-    pkgs.lastpass-cli
+    # Want one for DashLane
+    # pkgs.lastpass-cli
     pkgs.wireshark
     # pkgs.betterbird
     # NodeJS Dev Environment
@@ -84,13 +85,13 @@ in {
     # For telnet
     pkgs.inetutils
     # For Clickhouse development
-    pkgs.clickhouse
+    # pkgs.clickhouse
     # Love me some Infocom
     pkgs.frotz
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
-    pkgs.tailscale
+    # pkgs.tailscale
   ]) ++ (lib.optionals (isLinux && !isWSL) [
     pkgs.chromium
     # Markdown Preview Browser
@@ -98,7 +99,7 @@ in {
     pkgs.firefox
     pkgs.rofi
     pkgs.valgrind
-    pkgs.zathura
+    pkgs.zathura  # PDF viewer
     pkgs.xfce.xfce4-terminal
   ]);
 

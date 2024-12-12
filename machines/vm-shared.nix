@@ -7,7 +7,20 @@ let
   linuxGnome = true;
 in {
   # Be careful updating this.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # We would always prefer to use the latest tied to the NixOS release
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  # But sometimes (like when prl-tools falls behind), you need to nail down a
+  # recent-ish LTS kernel instead.
+  # The way to get the list of possible kernels to use is as follows:
+  # $ nix repl 
+  # nix-repl> :l <nixpkgs>
+  # Added 21552 variables.
+  #
+  # nix-repl> pkgs.linuxPackages [hit TAB to auto-complete the list of kernel versions]
+  #
+  # For right now, the latest kernel prl-tools supports without a patch is 6.10
+  # (NixOS 24.11 comes with Linux 6.13 by default)
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
 
   nix = {
     package = pkgs.nixVersions.latest;
@@ -60,7 +73,8 @@ in {
   i18n = {
     defaultLocale = "en_US.UTF-8";
     inputMethod = {
-      enabled = "fcitx5";
+      enable = true;
+      type = "fcitx5";
       fcitx5.addons = with pkgs; [
         fcitx5-gtk
       ];
@@ -121,9 +135,9 @@ in {
     killall
     niv
     # For NixOS 24.05 and below
-    rxvt_unicode
+    # rxvt_unicode
     # For NixOS 24.11 and above
-    #rxvt-unicode-unwrapped
+    rxvt-unicode-unwrapped
     xclip
 
     # TODO: GM - Do we even need this line???
