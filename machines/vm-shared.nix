@@ -8,7 +8,9 @@ let
 in {
   # Be careful updating this.
   # We would always prefer to use the latest tied to the NixOS release
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  # So normally, you'd do this to get the latest supported kernel for this NixOS release
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # But sometimes (like when prl-tools falls behind), you need to nail down a
   # recent-ish LTS kernel instead.
   # The way to get the list of possible kernels to use is as follows:
@@ -18,9 +20,12 @@ in {
   #
   # nix-repl> pkgs.linuxPackages [hit TAB to auto-complete the list of kernel versions]
   #
-  # For right now, the latest kernel prl-tools supports without a patch is 6.10
+  # For NixOS 24.11, the latest kernel prl-tools supports without a patch is 6.10
   # (NixOS 24.11 comes with Linux 6.13 by default)
-  boot.kernelPackages = pkgs.linuxPackages_6_6;
+  #
+  # Thus, you would define the following, and comment out the boot.kernelPackages above:
+  #
+  # boot.kernelPackages = pkgs.linuxPackages_6_6;
 
   nix = {
     package = pkgs.nixVersions.latest;
