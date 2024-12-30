@@ -144,6 +144,7 @@ in {
     # For NixOS 24.11 and above
     rxvt-unicode-unwrapped
     xclip
+    zig
 
     # TODO: GM - Do we even need this line???
     gnomeExtensions.kimpanel
