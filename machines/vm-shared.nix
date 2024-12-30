@@ -60,6 +60,9 @@ in {
   # Define your hostname.
   networking.hostName = "greenbirch";
 
+  # Set default DNS domains to search through
+  networking.search = [ "bloomberg.com" "gmarler.com" ];
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 
