@@ -30,8 +30,10 @@ in {
   # not a huge list.
   home.packages = [
     # pkgs._1password
+    #pkgs-unstable.ghostty
     pkgs.asciinema
     pkgs.bat
+    pkgs.bc
     pkgs.fd
     pkgs.fzf
     pkgs.gh
