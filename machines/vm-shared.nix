@@ -139,6 +139,7 @@ in {
   # $ nix search nixpkgs wget
   environment.systemPackages = with pkgs; [
     cachix
+    ghostty
     gnumake
     killall
     niv
