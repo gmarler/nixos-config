@@ -32,7 +32,7 @@
   networking.interfaces.enp0s5.useDHCP = true;
 
   # This line added with advent of prl-tools 20.2.2-55879
-  environment.unfreePackages = [ "prl-tools" ];
+  # environment.unfreePackages = [ "prl-tools" ];
 
   # Lots of stuff that uses aarch64 that claims doesn't work, but actually works.
   nixpkgs.config.allowUnfree = true;
