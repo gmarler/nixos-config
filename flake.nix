@@ -8,7 +8,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
     # We use the unstable nixpkgs repo for some packages.
-    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # Build a custom WSL installer
     nixos-wsl.url = "github:nix-community/NixOS-WSL";
@@ -36,7 +36,7 @@
     # };
   };
 
-  outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: let
+  outputs = { self, nixpkgs, nixpkgs-unstable, darwin, ... }@inputs: let
     # Overlays is the list of overlays we want to apply from flake inputs.
     # overlays = [
     #   inputs.jujutsu.overlays.default
@@ -44,7 +44,7 @@
 
     mkSystem = import ./lib/mksystem.nix {
       # inherit overlays nixpkgs inputs;
-      inherit nixpkgs inputs;
+      inherit nixpkgs nixpkgs-unstable inputs;
     };
   in {
     nixosConfigurations.vm-aarch64 = mkSystem "vm-aarch64" {
