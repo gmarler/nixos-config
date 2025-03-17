@@ -20,29 +20,19 @@
     # If you have to patch prl-tools, here's what needs specifying
     package = config.boot.kernelPackages.prl-tools.overrideAttrs (
       finalAttrs: previousAttrs: {
-        version = "20.2.0-55872";
+        version = "20.2.2-55879";
         src = previousAttrs.src.overrideAttrs {
-          outputHash = "sha256-oOilbF5MzZxZXNVQYAp/JxyMVdM0oltG8pGfzzsQ1kY=";
+          outputHash = "sha256-MgToUW9H4NWjY+yBxTqg9wZ2VDNbbDu0tIeHcGZxPkM=";
         };
-        installPhase =
-          builtins.replaceStrings
-          [
-              "cp prl_fs/SharedFolders/Guest/Linux/prl_fs/prl_fs.ko $out/lib/modules/${config.boot.kernelPackages.kernel.modDirVersion}/extra"
-              "mkdir -p $out/share/man/man8"
-              "install -Dm644 ../mount.prl_fs.8 $out/share/man/man8"
-          ]
-          [
-            ""
-            ""
-            ""
-          ]
-          previousAttrs.installPhase;
       }
     );
   };
 
   # Interface is this on my M2
   networking.interfaces.enp0s5.useDHCP = true;
+
+  # This line added with advent of prl-tools 20.2.2-55879
+  environment.unfreePackages = [ "prl-tools" ];
 
   # Lots of stuff that uses aarch64 that claims doesn't work, but actually works.
   nixpkgs.config.allowUnfree = true;
