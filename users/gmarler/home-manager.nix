@@ -73,6 +73,7 @@ in {
     pkgs.unzip
     pkgs.nerdfonts
     pkgs.rust-analyzer
+    pkgs.ruff
     # NOTE: These packages should be installed via the nixvim flake, not here
     pkgs.statix
     pkgs.eslint_d
