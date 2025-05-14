@@ -1,31 +1,14 @@
 { config, pkgs, lib, currentSystem, currentSystemName,... }:
 
-let
-  # Turn this to true to use gnome instead of i3. This is a bit
-  # of a hack, I just flip it on as I need to develop gnome stuff
-  # for now.
-  linuxGnome = true;
-in {
-  # Be careful updating this.
-  # We would always prefer to use the latest tied to the NixOS release
-  # So normally, you'd do this to get the latest supported kernel for this NixOS release
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+{
+  imports = [
+    ../modules/specialisation/plasma.nix
+    ../modules/specialisation/i3.nix
+    ../modules/specialisation/gnome-ibus.nix
+  ];
 
-  # But sometimes (like when prl-tools falls behind), you need to nail down a
-  # recent-ish LTS kernel instead.
-  # The way to get the list of possible kernels to use is as follows:
-  # $ nix repl 
-  # nix-repl> :l <nixpkgs>
-  # Added 21552 variables.
-  #
-  # nix-repl> pkgs.linuxPackages [hit TAB to auto-complete the list of kernel versions]
-  #
-  # For NixOS 24.11, the latest kernel prl-tools supports without a patch is 6.10
-  # (NixOS 24.11 comes with Linux 6.13 by default)
-  #
-  # Thus, you would define the following, and comment out the boot.kernelPackages above:
-  #
-  # boot.kernelPackages = pkgs.linuxPackages_6_6;
+  # Be careful updating this.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nix = {
     package = pkgs.nixVersions.latest;
@@ -76,6 +59,7 @@ in {
 
   # Virtualization settings
   virtualisation.docker.enable = true;
+  virtualisation.lxd = { enable = true; };
 
   # Select internationalisation properties.
   i18n = {
@@ -85,43 +69,18 @@ in {
       type = "fcitx5";
       fcitx5.addons = with pkgs; [
         fcitx5-gtk
+        fcitx5-hangul
+        fcitx5-mozc
       ];
     };
   };
 
-  # setup windowing environment
-  services.xserver = if linuxGnome then {
-    enable = true;
-    xkb.layout = "us";
-    desktopManager.gnome.enable = true;
-    displayManager.gdm.enable = true;
-  } else {
-    enable = true;
-    xkb.layout = "us";
-    dpi = 220;
+  # Enable tailscale. We manual authenticate when we want with
+  # "sudo tailscale up". If you don't use tailscale, you should
+  # comment out or delete all of this.
+  # services.tailscale.enable = true;
 
-    desktopManager = {
-      xterm.enable = false;
-      wallpaper.mode = "fill";
-    };
-
-    displayManager = {
-      defaultSession = "none+i3";
-      lightdm.enable = true;
-
-      # AARCH64: For now, on Apple Silicon, we must manually set the
-      # display resolution. This is a known issue with VMware Fusion.
-      sessionCommands = ''
-        ${pkgs.xorg.xset}/bin/xset r rate 200 40
-      '';
-    };
-
-    windowManager = {
-      i3.enable = true;
-    };
-  };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.mutableUsers = false;
 
   # Manage fonts. We pull these from a secret directory since most of these
@@ -143,15 +102,7 @@ in {
     gnumake
     killall
     niv
-    # For NixOS 24.05 and below
-    # rxvt_unicode
-    # For NixOS 24.11 and above
-    rxvt-unicode-unwrapped
     xclip
-    zig
-
-    # TODO: GM - Do we even need this line???
-    gnomeExtensions.kimpanel
 
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -167,6 +118,14 @@ in {
     gtkmm3
   ];
 
+  # Our default non-specialised desktop environment.
+  services.xserver = lib.mkIf (config.specialisation != {}) {
+    enable = true;
+    xkb.layout = "us";
+    desktopManager.gnome.enable = true;
+    displayManager.gdm.enable = true;
+  };
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -179,6 +138,15 @@ in {
   services.openssh.enable = true;
   services.openssh.settings.PasswordAuthentication = true;
   services.openssh.settings.PermitRootLogin = "yes";
+
+  # Enable flatpak.  I don't use any flatpak apps but I do sometimes test
+  # them so I keep this enabled
+  services.flatpak.enable = true;
+
+  # Enable snap.  I don't really use snap but I do sometimes test them
+  # and release snaps so we keep this enabled
+  # NOTE: Enabling this requires setting up more in the NixOS config
+  # services.snap.enable = true;
 
   # Disable the firewall since we're in a VM and we want to make it
   # easy to visit stuff in here. We only use NAT networking anyways.
