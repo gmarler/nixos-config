@@ -20,9 +20,9 @@
     # If you have to patch prl-tools, here's what needs specifying
     package = config.boot.kernelPackages.prl-tools.overrideAttrs (
       finalAttrs: previousAttrs: {
-        version = "20.2.2-55879";
+        version = "20.3.1-55959";
         src = previousAttrs.src.overrideAttrs {
-          outputHash = "sha256-MgToUW9H4NWjY+yBxTqg9wZ2VDNbbDu0tIeHcGZxPkM=";
+          outputHash = "sha256-/J6NouI2htptG06Undeg1rUfbWUu6q/nV2P9D+sS7OA=";
         };
       }
     );
