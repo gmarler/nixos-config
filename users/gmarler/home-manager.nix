@@ -39,6 +39,7 @@ in {
     pkgs.htop
     pkgs.jq
     pkgs.ripgrep
+    pkgs.rpm
     pkgs.sentry-cli
     pkgs.tree
     pkgs.watch
