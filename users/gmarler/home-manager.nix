@@ -54,8 +54,6 @@ in {
     #pkgs.nodejs_22
     pkgs.nodePackages_latest.nodejs
     #pkgs.nodePackages_latest.npm
-    pkgs.nodePackages_latest.webpack
-    pkgs.nodePackages_latest.webpack-cli
     pkgs.nodePackages_latest.gulp
     pkgs.nodePackages_latest.node2nix
     pkgs.nodePackages_latest.jsonlint
@@ -72,7 +70,12 @@ in {
     # pkgs.tree-sitter
     pkgs.stylua
     pkgs.unzip
-    pkgs.nerdfonts
+    pkgs.nerd-fonts.fira-mono
+    pkgs.nerd-fonts.fira-code
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.caskaydia-cove
+    pkgs.nerd-fonts.blex-mono
+    pkgs.nerd-fonts.commit-mono
     pkgs.rust-analyzer
     pkgs.ruff
     # NOTE: These packages should be installed via the nixvim flake, not here
@@ -343,7 +346,7 @@ in {
 
   services.gpg-agent = {
     enable = isLinux;
-    pinentryPackage = pkgs.pinentry-tty;
+    pinentry.package = pkgs.pinentry-tty;
 
     # cache the keys forever so we don't get asked for a password
     defaultCacheTtl = 31536000;
