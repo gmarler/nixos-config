@@ -215,109 +215,135 @@ in {
   # https://haseebmajid.dev/posts/2023-07-10-setting-up-tmux-with-nix-home-manager/
   programs.tmux = {
     enable = true;
+    shell = "${pkgs.bash}/bin/bash";
     terminal = "xterm-256color";
     shortcut = "l";
     secureSocket = false;
+    # Start windows and panes at 1, not 0
+    baseIndex = 1;
+    # Address vim mode switching delay (http://superuser.com/a/252717/65504)
+    escapeTime = 0;
+    # Increase scrollback buffer size from 2000 to 750000 lines
+    historyLimit = 750000;
+    keyMode = "vi";
+    mouse = true;
 
     plugins = with pkgs;
       [
           tmuxPlugins.vim-tmux-navigator
-          tmuxPlugins.catppuccin
+        {
+          plugin = tmuxPlugins.catppuccin;
+          # Following fixes issue with catppuccin setting the window names to
+          # the hostname
+          extraConfig = ''
+            set -g  @catpuccin_flavour "frappe"
+            set -gq @catppuccin_window_text " #W"
+            set -gq @catppuccin_window_current_text " #W"
+          '';
+        }
           tmuxPlugins.yank
-          tmuxPlugins.resurrect
-          tmuxPlugins.continuum
+        # tmuxPlugins.resurrect
+        # tmuxPlugins.continuum
       ];
 
-    extraConfig = ''
-      # Ensure that we start a bash shell for each tmux window, so .bashrc is invoked
-      # as a side effect
-      set-option -g default-command bash
+      extraConfig = ''
+        # Ensure that we start a bash shell for each tmux window, so .bashrc is invoked
+        # as a side effect
+        set-option -g default-command bash
 
-      ###############################################################################
-      # "Sensible" tmux defaults
-      ###############################################################################
-      # Address vim mode switching delay (http://superuser.com/a/252717/65504)
-      set -s escape-time 0
+        set-option -g automatic-rename on
+        set-option -g automatic-rename-format '#{b:pane_current_path}'
 
-      # Increase scrollback buffer size from 2000 to 750000 lines
-      set -g history-limit 750000
+        ###############################################################################
+        # "Sensible" tmux defaults
+        ###############################################################################
+        # Address vim mode switching delay (http://superuser.com/a/252717/65504)
+        # EscapeTime above
+        # set -s escape-time 0
 
-      # Increase tmux messages display duration from 750ms to 4s
-      set -g display-time 4000
+        # Increase scrollback buffer size from 2000 to 750000 lines
+        # historyLimit above
+        # set -g history-limit 750000
 
-      # Refresh 'status-left' and 'status-right' more often, from every 15s to 5s
-      set -g status-interval 5
+        # Increase tmux messages display duration from 750ms to 4s
+        set -g display-time 4000
 
-      # Upgrade $TERM
-      set -g default-terminal "screen-256color"
+        # Refresh 'status-left' and 'status-right' more often, from every 15s to 5s
+        set -g status-interval 5
 
-      # Focus events enabled for terminals that support them
-      set -g focus-events on
+        # Upgrade $TERM
+        set -g default-terminal "screen-256color"
 
-      # Super useful when using "grouped sessions" and multi-monitor setup
-      setw -g aggressive-resize on
+        # Focus events enabled for terminals that support them
+        set -g focus-events on
 
-      ###############################################################################
+        # Super useful when using "grouped sessions" and multi-monitor setup
+        setw -g aggressive-resize on
 
-      ###############################################################################
-      # Conveniences
-      ###############################################################################
-      # Allow moving windows left or right easily
-      bind-key -n C-S-Left swap-window -t -1\; select-window -t -1
-      bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
-      ###############################################################################
+        ###############################################################################
 
-      set-option -sa terminal-overrides ",xterm*:Tc"
-      set -g mouse on
+        ###############################################################################
+        # Conveniences
+        ###############################################################################
+        # Allow moving windows left or right easily
+        bind-key -n C-S-Left swap-window -t -1\; select-window -t -1
+        bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
+        ###############################################################################
 
-      # MY prefix (C-a, not C-b)
-      unbind C-b
-      set-option -g prefix C-a
-      bind-key C-a send-prefix
+        set-option -sa terminal-overrides ",xterm*:Tc"
+        # mouse above
+        # set -g mouse on
 
-      # Shift Alt vim keys to switch windows
-      bind -n M-H previous-window
-      bind -n M-L next-window
+        # MY prefix (C-a, not C-b)
+        unbind C-b
+        set-option -g prefix C-a
+        bind-key C-a send-prefix
 
-      # Start windows and panes at 1, not 0
-      set -g base-index 1
-      set -g pane-base-index 1
-      set-window-option -g pane-base-index 1
-      set-option -g renumber-windows on
+        # Shift Alt vim keys to switch windows
+        bind -n M-H previous-window
+        bind -n M-L next-window
 
-      # set -g @catppuccin_flavour 'latte'
-      set -g @catppuccin_flavour 'frappe'
+        # Start windows and panes at 1, not 0
+        # baseIndex above
+        # set -g base-index 1
+        set -g pane-base-index 1
+        set-window-option -g pane-base-index 1
+        set-option -g renumber-windows on
 
-      # set -g @plugin 'tmux-plugins/tpm'
-      # We set these separately above
-      # set -g @plugin 'tmux-plugins/tmux-sensible'
-      # set -g @plugin 'christoomey/vim-tmux-navigator'
-      # set -g @plugin 'catppuccin/tmux'
-      # Copy text to the system clipboard when using tmux
-      # set -g @plugin 'tmux-plugins/tmux-yank'
-      # Persist tmux environment across system restarts
-      # set -g @plugin 'tmux-plugins/tmux-resurrect'
-      # Depends on tmux-resurrect, and automatically/continuously saves tmux
-      # environment, as well as automatically restoring it upon tmux startup
-      # set -g @plugin 'tmux-plugins/tmux-continuum'
+        # set -g @catppuccin_flavour 'latte'
+        # set -g @catppuccin_flavour 'frappe'
 
-      # set vi-mode
-      set-window-option -g mode-keys vi
+        # set -g @plugin 'tmux-plugins/tpm'
+        # We set these separately above
+        # set -g @plugin 'tmux-plugins/tmux-sensible'
+        # set -g @plugin 'christoomey/vim-tmux-navigator'
+        # set -g @plugin 'catppuccin/tmux'
+        # Copy text to the system clipboard when using tmux
+        # set -g @plugin 'tmux-plugins/tmux-yank'
+        # Persist tmux environment across system restarts
+        # set -g @plugin 'tmux-plugins/tmux-resurrect'
+        # Depends on tmux-resurrect, and automatically/continuously saves tmux
+        # environment, as well as automatically restoring it upon tmux startup
+        # set -g @plugin 'tmux-plugins/tmux-continuum'
 
-      # keybindings
-      bind-key -T copy-mode-vi v send-keys -X begin-selection
-      bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
-      bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
-      bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -sel clip -i"
+        # set vi-mode
+        # keyMode above ???
+        # set-window-option -g mode-keys vi
 
-      # Open panes in current directory using sane split commands
-      bind '-' split-window -v -c "#{pane_current_path}"
-      bind '|' split-window -h -c "#{pane_current_path}"
-      unbind '"'
-      unbind '%'
+        # keybindings
+        bind-key -T copy-mode-vi v send-keys -X begin-selection
+        bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+        bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -sel clip -i"
 
-      # run '~/.tmux/plugins/tpm/tpm'
-    '';
+        # Open panes in current directory using sane split commands
+        # Which means change splits to match nvim and easier to remember
+        # Open new split at cwd of current split
+        bind '-' split-window -v -c "#{pane_current_path}"
+        bind '|' split-window -h -c "#{pane_current_path}"
+        unbind '"'
+        unbind '%'
+      '';
   };
 
 
