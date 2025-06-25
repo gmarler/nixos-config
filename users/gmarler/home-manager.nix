@@ -217,7 +217,7 @@ in {
     enable = true;
     shell = "${pkgs.bash}/bin/bash";
     terminal = "xterm-256color";
-    shortcut = "l";
+    shortcut = "a";
     secureSocket = false;
     # Start windows and panes at 1, not 0
     baseIndex = 1;
@@ -295,9 +295,10 @@ in {
         # set -g mouse on
 
         # MY prefix (C-a, not C-b)
-        unbind C-b
-        set-option -g prefix C-a
-        bind-key C-a send-prefix
+        # shortcut above
+        # unbind C-b
+        # set-option -g prefix C-a
+        # bind-key C-a send-prefix
 
         # Shift Alt vim keys to switch windows
         bind -n M-H previous-window
