@@ -59,7 +59,10 @@
 
   # Virtualization settings
   virtualisation.docker.enable = true;
-  virtualisation.lxd = { enable = true; };
+  # Commented out on 2025-07-11 due to:
+  # https://www.google.com/url?sa=i&source=web&rct=j&url=https://github.com/nixos/nixpkgs/issues/422385&ved=2ahUKEwizj4zhi7WOAxUkKFkFHczhMMAQy_kOegQIABAL&opi=89978449&cd&psig=AOvVaw1HXzcT7enX1TJxF6tWWGaS&ust=1752333133965000
+  # Update flake again in a few days and try again with the below uncommended
+  # virtualisation.lxd = { enable = true; };
 
   # Select internationalisation properties.
   i18n = {
