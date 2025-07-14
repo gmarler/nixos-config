@@ -2,8 +2,9 @@
 
 {
   imports = [
-    ../modules/specialisation/plasma.nix
-    ../modules/specialisation/i3.nix
+    ../modules/specialisation/xfce.nix
+    # ../modules/specialisation/plasma.nix
+    # ../modules/specialisation/i3.nix
     ../modules/specialisation/gnome-ibus.nix
   ];
 
