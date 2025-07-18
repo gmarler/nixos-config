@@ -19,6 +19,11 @@
       keep-derivations = true
     '';
 
+    settings = {
+      # So I can pass options to nix builds and such
+      trusted-users = [ "gmarler" ];
+    };
+
     # public binary cache that I use for all my derivations. You can keep
     # this, use your own, or toss it. Its typically safe to use a binary cache
     # since the data inside is checksummed.
@@ -104,6 +109,7 @@
     killall
     niv
     xclip
+    openssl
 
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
