@@ -1,4 +1,11 @@
-{ config, pkgs, lib, currentSystem, currentSystemName,... }:
+{
+  config,
+  pkgs,
+  lib,
+  currentSystem,
+  currentSystemName,
+  ...
+}:
 
 {
   imports = [
@@ -50,7 +57,10 @@
   networking.hostName = "greenbirch";
 
   # Set default DNS domains to search through
-  networking.search = [ "bloomberg.com" "gmarler.com" ];
+  networking.search = [
+    "bloomberg.com"
+    "gmarler.com"
+  ];
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -65,7 +75,9 @@
 
   # Virtualization settings
   virtualisation.docker.enable = true;
-  virtualisation.lxd = { enable = true; };
+  virtualisation.lxd = {
+    enable = true;
+  };
 
   # Select internationalisation properties.
   i18n = {
@@ -102,31 +114,34 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search nixpkgs wget
-  environment.systemPackages = with pkgs; [
-    cachix
-    ghostty
-    gnumake
-    killall
-    niv
-    xclip
-    openssl
+  environment.systemPackages =
+    with pkgs;
+    [
+      cachix
+      ghostty
+      gnumake
+      killall
+      niv
+      xclip
+      openssl
 
-    # For hypervisors that support auto-resizing, this script forces it.
-    # I've noticed not everyone listens to the udev events so this is a hack.
-    (writeShellScriptBin "xrandr-auto" ''
-      xrandr --output Virtual-1 --auto
-    '')
-  ] ++ lib.optionals (currentSystemName == "vm-aarch64-prl") [
-    # TODO: The currentSystemName should be scrutinized, and probably should be
-    #       vm-aarch64-prl for my config
-    # This is needed for the vmware user tools clipboard to work.
-    # You can test if you don't need this by deleting this and seeing
-    # if the clipboard sill works.
-    gtkmm3
-  ];
+      # For hypervisors that support auto-resizing, this script forces it.
+      # I've noticed not everyone listens to the udev events so this is a hack.
+      (writeShellScriptBin "xrandr-auto" ''
+        xrandr --output Virtual-1 --auto
+      '')
+    ]
+    ++ lib.optionals (currentSystemName == "vm-aarch64-prl") [
+      # TODO: The currentSystemName should be scrutinized, and probably should be
+      #       vm-aarch64-prl for my config
+      # This is needed for the vmware user tools clipboard to work.
+      # You can test if you don't need this by deleting this and seeing
+      # if the clipboard sill works.
+      gtkmm3
+    ];
 
   # Our default non-specialised desktop environment.
-  services.xserver = lib.mkIf (config.specialisation != {}) {
+  services.xserver = lib.mkIf (config.specialisation != { }) {
     enable = true;
     xkb.layout = "us";
     desktopManager.gnome.enable = true;
