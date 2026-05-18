@@ -1,6 +1,11 @@
 { isWSL, inputs, ... }:
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # sources = import ../../nix/sources.nix;
@@ -9,12 +14,20 @@ let
 
   # For our MANPAGER env var
   # https://github.com/sharkdp/bat/issues/1145
-  manpager = (pkgs.writeShellScriptBin "manpager" (if isDarwin then ''
-    sh -c 'col -bx | bat -l man -p'
-    '' else ''
-    cat "$1" | col -bx | bat --language man --style plain
-  ''));
-in {
+  manpager = (
+    pkgs.writeShellScriptBin "manpager" (
+      if isDarwin then
+        ''
+          sh -c 'col -bx | bat -l man -p'
+        ''
+      else
+        ''
+          cat "$1" | col -bx | bat --language man --style plain
+        ''
+    )
+  );
+in
+{
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
   home.stateVersion = "18.09";
@@ -94,18 +107,20 @@ in {
     # pkgs.clickhouse
     # Love me some Infocom
     pkgs.frotz
-  ] ++ (lib.optionals isDarwin [
+  ]
+  ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
     # pkgs.tailscale
-  ]) ++ (lib.optionals (isLinux && !isWSL) [
+  ])
+  ++ (lib.optionals (isLinux && !isWSL) [
     pkgs.chromium
     # Markdown Preview Browser
     pkgs.floorp
     pkgs.firefox
     pkgs.rofi
     pkgs.valgrind
-    pkgs.zathura  # PDF viewer
+    pkgs.zathura # PDF viewer
     pkgs.xfce.xfce4-terminal
   ]);
 
@@ -120,6 +135,8 @@ in {
     EDITOR = "nvim";
     PAGER = "less -FirSwX";
     MANPAGER = "${manpager}/bin/manpager";
+    NIX_SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle.crt";
+    GIT_SSL_CAINFO = "/etc/ssl/certs/ca-bundle.crt";
   };
 
   home.file = {
@@ -153,33 +170,37 @@ in {
 
   programs.bash = {
     enable = true;
-    shellOptions = [];
-    historyControl = [ "ignoredups" "ignorespace" ];
+    shellOptions = [ ];
+    historyControl = [
+      "ignoredups"
+      "ignorespace"
+    ];
     initExtra = builtins.readFile ./bashrc;
 
     shellAliases = {
-      # ga = "git add";
-      # gc = "git commit";
-      # gco = "git checkout";
-      # gcp = "git cherry-pick";
-      # gdiff = "git diff";
-      # gl = "git prettylog";
-      # gp = "git push";
-      # gs = "git status";
-      # gt = "git tag";
+      ga = "git add";
+      gc = "git commit";
+      gco = "git checkout";
+      gcp = "git cherry-pick";
+      gdiff = "git diff";
+      gl = "git prettylog";
+      glo = "git log --oneline --graph --pretty=format:'%h %ad %s [%an]' --date=local";
+      gp = "git push";
+      gs = "git status";
+      gt = "git tag";
     };
   };
 
-  programs.direnv= {
+  programs.direnv = {
     enable = true;
 
     config = {
       whitelist = {
-        prefix= [
+        prefix = [
           "$HOME/code/go/src/github.com/gmarler"
         ];
 
-        exact = ["$HOME/.envrc"];
+        exact = [ "$HOME/.envrc" ];
       };
     };
   };
@@ -210,7 +231,6 @@ in {
     };
   };
 
-
   # See for interesting details:
   # https://haseebmajid.dev/posts/2023-07-10-setting-up-tmux-with-nix-home-manager/
   programs.tmux = {
@@ -228,125 +248,123 @@ in {
     keyMode = "vi";
     mouse = true;
 
-    plugins = with pkgs;
-      [
-          tmuxPlugins.vim-tmux-navigator
-        {
-          plugin = tmuxPlugins.catppuccin;
-          # Following fixes issue with catppuccin setting the window names to
-          # the hostname
-          extraConfig = ''
-            set -g  @catpuccin_flavour "frappe"
-            set -gq @catppuccin_window_text " #W"
-            set -gq @catppuccin_window_current_text " #W"
-          '';
-        }
-          tmuxPlugins.yank
-        # tmuxPlugins.resurrect
-        # tmuxPlugins.continuum
-      ];
+    plugins = with pkgs; [
+      tmuxPlugins.vim-tmux-navigator
+      {
+        plugin = tmuxPlugins.catppuccin;
+        # Following fixes issue with catppuccin setting the window names to
+        # the hostname
+        extraConfig = ''
+          set -g  @catpuccin_flavour "frappe"
+          set -gq @catppuccin_window_text " #W"
+          set -gq @catppuccin_window_current_text " #W"
+        '';
+      }
+      tmuxPlugins.yank
+      # tmuxPlugins.resurrect
+      # tmuxPlugins.continuum
+    ];
 
-      extraConfig = ''
-        # Ensure that we start a bash shell for each tmux window, so .bashrc is invoked
-        # as a side effect
-        set-option -g default-command bash
+    extraConfig = ''
+      # Ensure that we start a bash shell for each tmux window, so .bashrc is invoked
+      # as a side effect
+      set-option -g default-command bash
 
-        set-option -g automatic-rename on
-        set-option -g automatic-rename-format '#{b:pane_current_path}'
+      set-option -g automatic-rename on
+      set-option -g automatic-rename-format '#{b:pane_current_path}'
 
-        ###############################################################################
-        # "Sensible" tmux defaults
-        ###############################################################################
-        # Address vim mode switching delay (http://superuser.com/a/252717/65504)
-        # EscapeTime above
-        # set -s escape-time 0
+      ###############################################################################
+      # "Sensible" tmux defaults
+      ###############################################################################
+      # Address vim mode switching delay (http://superuser.com/a/252717/65504)
+      # EscapeTime above
+      # set -s escape-time 0
 
-        # Increase scrollback buffer size from 2000 to 750000 lines
-        # historyLimit above
-        # set -g history-limit 750000
+      # Increase scrollback buffer size from 2000 to 750000 lines
+      # historyLimit above
+      # set -g history-limit 750000
 
-        # Increase tmux messages display duration from 750ms to 4s
-        set -g display-time 4000
+      # Increase tmux messages display duration from 750ms to 4s
+      set -g display-time 4000
 
-        # Refresh 'status-left' and 'status-right' more often, from every 15s to 5s
-        set -g status-interval 5
+      # Refresh 'status-left' and 'status-right' more often, from every 15s to 5s
+      set -g status-interval 5
 
-        # Upgrade $TERM
-        set -g default-terminal "screen-256color"
+      # Upgrade $TERM
+      set -g default-terminal "screen-256color"
 
-        # Focus events enabled for terminals that support them
-        set -g focus-events on
+      # Focus events enabled for terminals that support them
+      set -g focus-events on
 
-        # Super useful when using "grouped sessions" and multi-monitor setup
-        setw -g aggressive-resize on
+      # Super useful when using "grouped sessions" and multi-monitor setup
+      setw -g aggressive-resize on
 
-        ###############################################################################
+      ###############################################################################
 
-        ###############################################################################
-        # Conveniences
-        ###############################################################################
-        # Allow moving windows left or right easily
-        bind-key -n C-S-Left swap-window -t -1\; select-window -t -1
-        bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
-        ###############################################################################
+      ###############################################################################
+      # Conveniences
+      ###############################################################################
+      # Allow moving windows left or right easily
+      bind-key -n C-S-Left swap-window -t -1\; select-window -t -1
+      bind-key -n C-S-Right swap-window -t +1\; select-window -t +1
+      ###############################################################################
 
-        set-option -sa terminal-overrides ",xterm*:Tc"
-        # mouse above
-        # set -g mouse on
+      set-option -sa terminal-overrides ",xterm*:Tc"
+      # mouse above
+      # set -g mouse on
 
-        # MY prefix (C-a, not C-b)
-        # shortcut above
-        # unbind C-b
-        # set-option -g prefix C-a
-        # bind-key C-a send-prefix
+      # MY prefix (C-a, not C-b)
+      # shortcut above
+      # unbind C-b
+      # set-option -g prefix C-a
+      # bind-key C-a send-prefix
 
-        # Shift Alt vim keys to switch windows
-        bind -n M-H previous-window
-        bind -n M-L next-window
+      # Shift Alt vim keys to switch windows
+      bind -n M-H previous-window
+      bind -n M-L next-window
 
-        # Start windows and panes at 1, not 0
-        # baseIndex above
-        # set -g base-index 1
-        set -g pane-base-index 1
-        set-window-option -g pane-base-index 1
-        set-option -g renumber-windows on
+      # Start windows and panes at 1, not 0
+      # baseIndex above
+      # set -g base-index 1
+      set -g pane-base-index 1
+      set-window-option -g pane-base-index 1
+      set-option -g renumber-windows on
 
-        # set -g @catppuccin_flavour 'latte'
-        # set -g @catppuccin_flavour 'frappe'
+      # set -g @catppuccin_flavour 'latte'
+      # set -g @catppuccin_flavour 'frappe'
 
-        # set -g @plugin 'tmux-plugins/tpm'
-        # We set these separately above
-        # set -g @plugin 'tmux-plugins/tmux-sensible'
-        # set -g @plugin 'christoomey/vim-tmux-navigator'
-        # set -g @plugin 'catppuccin/tmux'
-        # Copy text to the system clipboard when using tmux
-        # set -g @plugin 'tmux-plugins/tmux-yank'
-        # Persist tmux environment across system restarts
-        # set -g @plugin 'tmux-plugins/tmux-resurrect'
-        # Depends on tmux-resurrect, and automatically/continuously saves tmux
-        # environment, as well as automatically restoring it upon tmux startup
-        # set -g @plugin 'tmux-plugins/tmux-continuum'
+      # set -g @plugin 'tmux-plugins/tpm'
+      # We set these separately above
+      # set -g @plugin 'tmux-plugins/tmux-sensible'
+      # set -g @plugin 'christoomey/vim-tmux-navigator'
+      # set -g @plugin 'catppuccin/tmux'
+      # Copy text to the system clipboard when using tmux
+      # set -g @plugin 'tmux-plugins/tmux-yank'
+      # Persist tmux environment across system restarts
+      # set -g @plugin 'tmux-plugins/tmux-resurrect'
+      # Depends on tmux-resurrect, and automatically/continuously saves tmux
+      # environment, as well as automatically restoring it upon tmux startup
+      # set -g @plugin 'tmux-plugins/tmux-continuum'
 
-        # set vi-mode
-        # keyMode above ???
-        # set-window-option -g mode-keys vi
+      # set vi-mode
+      # keyMode above ???
+      # set-window-option -g mode-keys vi
 
-        # keybindings
-        bind-key -T copy-mode-vi v send-keys -X begin-selection
-        bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
-        bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
-        bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -sel clip -i"
+      # keybindings
+      bind-key -T copy-mode-vi v send-keys -X begin-selection
+      bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+      bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+      bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -sel clip -i"
 
-        # Open panes in current directory using sane split commands
-        # Which means change splits to match nvim and easier to remember
-        # Open new split at cwd of current split
-        bind '-' split-window -v -c "#{pane_current_path}"
-        bind '|' split-window -h -c "#{pane_current_path}"
-        unbind '"'
-        unbind '%'
-      '';
+      # Open panes in current directory using sane split commands
+      # Which means change splits to match nvim and easier to remember
+      # Open new split at cwd of current split
+      bind '-' split-window -v -c "#{pane_current_path}"
+      bind '|' split-window -h -c "#{pane_current_path}"
+      unbind '"'
+      unbind '%'
+    '';
   };
-
 
   programs.i3status = {
     enable = isLinux && !isWSL;
